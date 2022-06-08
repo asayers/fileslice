@@ -1,8 +1,11 @@
 [package]
 name = "fileslice"
+description = "Slices of files"
 version = "0.1.0"
+authors = ["Alex Sayers <alex@asayers.com>"]
 edition = "2021"
 license = "Unlicense"
+repository = "https://github.com/asayers/fileslice"
 
 [dependencies]
 # Chrono is not a direct dependency; it's a dependency of "parquet".  However,
