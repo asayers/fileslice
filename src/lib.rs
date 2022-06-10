@@ -45,9 +45,12 @@ impl FileSlice {
 
     /// Take a sub-slice of this file
     pub fn slice(&self, start: u64, end: u64) -> FileSlice {
-        assert!(start <= end);
+        // The parameters are interpreted relative to `self`
         let start = self.start + start;
-        let end = (self.start + end).min(self.end);
+        let end = self.start + end;
+        let end = end
+            .min(self.end) // Not allowed to expand beyond `self`
+            .max(start); // We require that `start <= end`
         FileSlice {
             file: self.file.clone(),
             cursor: start,
