@@ -16,7 +16,6 @@ Optional integrations for crates which naturally benefit from file slicing:
 
 use std::fs::File;
 use std::io::{Read, Seek, SeekFrom};
-use std::os::unix::fs::FileExt;
 use std::sync::Arc;
 
 /// A slice of a file
@@ -70,14 +69,17 @@ impl Read for FileSlice {
         let x;
         #[cfg(target_family = "unix")]
         {
+            use std::os::unix::fs::FileExt;
             x = self.file.read_at(buf, self.cursor)?;
         }
         #[cfg(target_family = "windows")]
         {
+            use std::os::windows::fs::FileExt;
             x = self.file.seek_read(buf, self.cursor)?;
         }
         #[cfg(target_family = "wasm")]
         {
+            use std::os::wasi::fs::FileExt;
             x = self.file.read_at(buf, self.cursor)?;
         }
 
