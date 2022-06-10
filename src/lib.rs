@@ -78,7 +78,7 @@ impl Read for FileSlice {
         }
         #[cfg(target_family = "wasm")]
         {
-            x = todo!();
+            x = self.file.read_at(buf, self.cursor)?;
         }
 
         self.cursor += x as u64;
