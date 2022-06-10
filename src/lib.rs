@@ -1,5 +1,14 @@
 /*! Slices of files
 
+[`FileSlice`] is to `File` what [`Bytes`](https://docs.rs/bytes/) is to
+`Vec<u8>`.  Advantages over `File`:
+
+* You can slice it, reducing the scope to a range within the original file
+* Cloning is cheap (atomic addition; no syscall)
+* Seeking is very cheap (normal addition; no syscall)
+* Clones can't affect each other at all (the fd's real cursor is never
+  used).
+
 ## Optional features
 
 Optional integrations for crates which naturally benefit from file slicing:
