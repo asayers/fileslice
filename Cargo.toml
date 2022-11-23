@@ -8,16 +8,11 @@ license = "Unlicense"
 repository = "https://github.com/asayers/fileslice"
 
 [dependencies]
-# Chrono is not a direct dependency; it's a dependency of "parquet".  However,
-# parquet's Cargo.toml is slightly buggy, so if we don't specify chrono here
-# then parquet fails to compile.
-chrono = { version = "0.4.19", default-features = false, features = ["clock"], optional = true }
-parquet = { version = "15.0.0", default-features = false, optional = true }
+parquet = { version = "27.0.0", default-features = false, optional = true }
 tar = { version = "0.4.38", optional = true }
 
 [features]
 default = ["parquet", "tar"]
-parquet = ["dep:parquet", "chrono"]
 
 [dev-dependencies]
-parquet = { version = "15.0.0", features = ["zstd"], default-features = false }
+parquet = { version = "27.0.0", features = ["zstd"], default-features = false }
