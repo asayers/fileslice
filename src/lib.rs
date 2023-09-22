@@ -128,6 +128,7 @@ impl Seek for FileSlice {
 #[cfg(feature = "parquet")]
 mod parquet_impls {
     use super::*;
+    use bytes::Bytes;
     use parquet::file::reader::{ChunkReader, Length};
 
     impl Length for FileSlice {
@@ -139,8 +140,15 @@ mod parquet_impls {
     impl ChunkReader for FileSlice {
         type T = FileSlice;
 
-        fn get_read(&self, start: u64, length: usize) -> parquet::errors::Result<FileSlice> {
-            Ok(self.slice(start, start + length as u64))
+        fn get_read(&self, start: u64) -> parquet::errors::Result<FileSlice> {
+            Ok(self.slice(start, self.end))
+        }
+
+        fn get_bytes(&self, start: u64, length: usize) -> parquet::errors::Result<Bytes> {
+            let mut buf = Vec::with_capacity(length);
+            self.slice(start, start + length as u64)
+                .read_exact(&mut buf)?;
+            Ok(buf.into())
         }
     }
 }
