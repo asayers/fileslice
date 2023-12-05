@@ -102,6 +102,18 @@ impl FileSlice {
     pub fn cursor_pos(&self) -> u64 {
         self.cursor
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.start == self.end
+    }
+
+    pub fn len(&self) -> usize {
+        (self.end - self.start) as usize
+    }
+
+    pub fn bytes_remaining(&self) -> usize {
+        (self.end - self.cursor) as usize
+    }
 }
 
 impl Read for FileSlice {
