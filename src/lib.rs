@@ -156,6 +156,22 @@ impl Seek for FileSlice {
     }
 }
 
+impl FileSlice {
+    /// Try to get back the inner `File`
+    ///
+    /// This only works if this `FileSlice` has no living clones.  If there are
+    /// other `FileSlices` using the same `File`, this method will return the
+    /// original `FileSlice` unmodified.
+    pub fn try_unwrap(self) -> Result<File, FileSlice> {
+        Arc::try_unwrap(self.file).map_err(|file| FileSlice {
+            file,
+            cursor: self.cursor,
+            start: self.start,
+            end: self.end,
+        })
+    }
+}
+
 #[cfg(feature = "parquet")]
 mod parquet_impls {
     use super::*;
