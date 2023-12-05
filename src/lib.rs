@@ -69,6 +69,25 @@ impl FileSlice {
     }
 }
 
+impl FileSlice {
+    /// The position at which this slice begins, as a byte offset into the
+    /// underlying file
+    pub fn start_pos(&self) -> u64 {
+        self.start
+    }
+
+    /// The position at which this slice ends, as a byte offset into the
+    /// underlying file
+    pub fn end_pos(&self) -> u64 {
+        self.end
+    }
+
+    /// The next byte to be read, as an offset into the underlying file
+    pub fn cursor_pos(&self) -> u64 {
+        self.cursor
+    }
+}
+
 impl Read for FileSlice {
     fn read(&mut self, buf: &mut [u8]) -> std::io::Result<usize> {
         let remaining = (self.end - self.cursor) as usize;
