@@ -25,6 +25,7 @@ Optional integrations for crates which naturally benefit from file slicing:
 
 use std::fs::File;
 use std::io::{Read, Seek, SeekFrom};
+use std::ops::{Bound, RangeBounds};
 use std::sync::Arc;
 
 /// A slice of a file
@@ -53,10 +54,21 @@ impl FileSlice {
     }
 
     /// Take a sub-slice of this file
-    pub fn slice(&self, start: u64, end: u64) -> FileSlice {
+    pub fn slice<T>(&self, range: T) -> FileSlice
+    where
+        T: RangeBounds<u64>,
+    {
         // The parameters are interpreted relative to `self`
-        let start = self.start + start;
-        let end = self.start + end;
+        let start = match range.start_bound() {
+            Bound::Included(x) => self.start + x,
+            Bound::Excluded(x) => self.start + x + 1,
+            Bound::Unbounded => self.start,
+        };
+        let end = match range.end_bound() {
+            Bound::Included(x) => self.start + x + 1,
+            Bound::Excluded(x) => self.start + x,
+            Bound::Unbounded => self.end,
+        };
         let end = end
             .min(self.end) // Not allowed to expand beyond `self`
             .max(start); // We require that `start <= end`
@@ -160,12 +172,12 @@ mod parquet_impls {
         type T = FileSlice;
 
         fn get_read(&self, start: u64) -> parquet::errors::Result<FileSlice> {
-            Ok(self.slice(start, self.end))
+            Ok(self.slice(start..self.end))
         }
 
         fn get_bytes(&self, start: u64, length: usize) -> parquet::errors::Result<Bytes> {
             let mut buf = Vec::with_capacity(length);
-            self.slice(start, start + length as u64)
+            self.slice(start..(start + length as u64))
                 .read_exact(&mut buf)?;
             Ok(buf.into())
         }
@@ -188,5 +200,5 @@ pub fn slice_tarball(
     let file = FileSlice::new(archive.into_inner());
     Ok(headers
         .into_iter()
-        .map(move |(header, start, end)| (header, file.slice(start, end))))
+        .map(move |(header, start, end)| (header, file.slice(start..end))))
 }
