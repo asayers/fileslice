@@ -207,7 +207,7 @@ mod parquet_impls {
         }
 
         fn get_bytes(&self, start: u64, length: usize) -> parquet::errors::Result<Bytes> {
-            let mut buf = Vec::with_capacity(length);
+            let mut buf = vec![0; length];
             self.slice(start..(start + length as u64))
                 .read_exact(&mut buf)?;
             Ok(buf.into())
