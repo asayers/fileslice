@@ -9,6 +9,10 @@
 * Clones can't affect each other at all (the fd's real cursor is never
   used).
 
+Once created, a `FileSlice` never changes length, even if the underlying file
+does.  For example, if another process appends some data to the file, you need
+to call [`FileSlice::expand`] on your slice in order to add the new data.
+
 ## Optional features
 
 Optional integrations for crates which naturally benefit from file slicing:
@@ -157,6 +161,17 @@ impl Seek for FileSlice {
 }
 
 impl FileSlice {
+    /// Expand the slice to cover the whole file
+    ///
+    /// This queries the underlying file for its current length, which may have
+    /// changed since this `FileSlice` was created.  Counter-intuitively, this
+    /// means that calling this method _could_ in theory cause the length of the
+    /// `FileSlice` to reduce (if the underlying file has been truncated).
+    pub fn expand(&mut self) {
+        self.start = 0;
+        self.end = self.file.metadata().unwrap().len();
+    }
+
     /// Try to get back the inner `File`
     ///
     /// This only works if this `FileSlice` has no living clones.  If there are
