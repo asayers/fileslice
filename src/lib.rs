@@ -21,9 +21,9 @@ Optional integrations for crates which naturally benefit from file slicing:
   `tar::Archive` into a bunch of `FileSlice`s.
 * `parquet`: Adds a [`ChunkReader`][parquet::file::reader::ChunkReader]
   impl for [`FileSlice`].  A parquet file contains many pages, and the decoder
-  needs to interleave reads from these pages.  The `ChunkReader` impl for
-  `File` accomplishes this by making many clones of the fd.  Using `FileSlice`
-  instead lets you open ~7 as many parquet files before you hit your fd limit.
+  needs to interleave reads from these pages.  The `ChunkReader` impl for `File`
+  accomplishes this by making many clones of the fd.  Using `FileSlice` instead
+  lets you open roughly 7x as many parquet files before you hit your fd limit.
 
 */
 
