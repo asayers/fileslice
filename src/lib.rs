@@ -207,7 +207,7 @@ mod parquet_impls {
 
     impl Length for FileSlice {
         fn len(&self) -> u64 {
-            self.end - self.cursor
+            self.end - self.start
         }
     }
 
