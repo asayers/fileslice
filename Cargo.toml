@@ -15,6 +15,8 @@ tar = { version = "0.4.40", optional = true }
 [features]
 default = ["parquet", "tar"]
 parquet = ["dep:parquet", "bytes"]
+tar = ["dep:tar"]
+bytes = ["dep:bytes"]
 
 [dev-dependencies]
 parquet = { version = "49", features = ["zstd"], default-features = false }
