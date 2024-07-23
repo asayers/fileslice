@@ -8,9 +8,9 @@ license = "Unlicense"
 repository = "https://github.com/asayers/fileslice"
 
 [dependencies]
-bytes = { version = "1.5.0", optional = true }
-parquet = { version = "49", default-features = false, optional = true }
-tar = { version = "0.4.40", optional = true }
+bytes = { version = "1.6.1", optional = true }
+parquet = { version = "52.1.0", default-features = false, optional = true }
+tar = { version = "0.4.41", optional = true }
 
 [features]
 default = ["parquet", "tar"]
@@ -19,4 +19,4 @@ tar = ["dep:tar"]
 bytes = ["dep:bytes"]
 
 [dev-dependencies]
-parquet = { version = "49", features = ["zstd"], default-features = false }
+parquet = { version = "52.1.0", features = ["zstd"], default-features = false }
