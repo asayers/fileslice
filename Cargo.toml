@@ -3,7 +3,7 @@ name = "fileslice"
 description = "Slices of files"
 version = "0.8.0"
 authors = ["Alex Sayers <alex@asayers.com>"]
-edition = "2021"
+edition = "2024"
 license = "Unlicense"
 repository = "https://github.com/asayers/fileslice"
 

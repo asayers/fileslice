@@ -156,12 +156,7 @@ impl Seek for FileSlice {
         };
         let cursor = match u64::try_from(cursor) {
             Ok(x) if x >= self.start => x,
-            _ => {
-                return Err(std::io::Error::new(
-                    std::io::ErrorKind::Other,
-                    "Out of bounds",
-                ))
-            }
+            _ => return Err(std::io::Error::other("Out of bounds")),
         };
         self.cursor = cursor;
         self.stream_position()
